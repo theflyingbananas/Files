@@ -1,2 +1,2 @@
 # Files
-C'est ici qu'on mettra nos fichiers à partager!
+Tcho les hone! C'est dans ce dossier qu'on mettra nos fichiers à partager!
