@@ -1,0 +1,87 @@
+package quest
+
+class ReponseController {
+
+	
+	// On récupère les réponses du questionnaire rapide
+  def resultRapide()
+  {
+	  String nom = params.name;
+	  int Nbre = 0;
+	  double moyenne = 0;
+	  String type = "quick";
+	  boolean State = true;
+	  
+	 def rep = ReponseInteger.findByNameAndQuickOrDetailedAndState(nom, type, State); 
+	 
+	  if(rep != null)
+	  {
+		  for(int i=0;i<rep.size();i++)
+		  {
+			  Nbre++;
+			  moyenne+=$(rep.get(i).responseInteger);
+		  }
+		
+	  }
+	  if(Nbre != 0)
+	  {
+		  moyenne = moyenne/Nbre;
+	  }
+	  render moyenne;
+	  
+  }
+  
+  def resultDetailleString()
+  {
+	  ArrayList<Integer> Nbre = new ArrayList<Integer>();
+	  int NbreQuestions = 0;
+	  String nom = params.name;
+	  String type = "detailed";
+	  ArrayList<String> list = new ArrayList<String>();
+	  boolean State = true;
+	  
+	  // On sélectionne les réponses écrites d'un même questionnaire  :
+	  def rep = ResponseString.findByNameAndQuickOrDetailedAndState(nom, type, State);
+	  
+	  // On récupère le nombre de questions
+	  	  
+	  if(rep != null)
+	  {
+		  for(int i=0;i<rep.size();i++)
+		  {
+			  Nbre.add(rep.get(i).questionNumber);
+		  }
+		  NbreQuestions = NbreQuestion(Nbre);
+	  }
+	  
+	  for(int j=1;j<=NbreQuestions;j++)
+	  {
+		  // On récupère la réponse j du questionnaire 
+		 def repFinal =  ResponseString.findByNameAndQuickOrDetailedAndQuestionNumberAndState(nom,type,j, State);
+		 
+		  if(repFinal != null)
+		  {
+			  for(int i=0;i<repFinal.size();i++)
+			  {
+				  list.add("Question "+j+" : "+$(repFinal.responseText)+"");
+			  }
+		  }
+	  }
+	
+
+	  
+	
+	  EcritureFichier("Resultat.csv", list);
+	  
+  
+  }
+  
+  def resultDetailleInt()
+  {
+	  
+  }
+
+  
+	  
+ 
+}
